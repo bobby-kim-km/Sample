@@ -4,6 +4,8 @@ import com.example.sample.data.JobResult
 import com.example.sample.data.remote.api.GithubUserService
 import com.example.sample.data.remote.dto.UserRequestDto
 import com.example.sample.data.remote.dto.UserResponseDto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,11 +15,13 @@ class GithubUserRemoteSource @Inject constructor(
 ) {
 
     suspend fun getUser(userRequestDto: UserRequestDto): JobResult<UserResponseDto> {
-        return try {
-            val response: UserResponseDto = githubUserService.getUser(userRequestDto.id)
-            JobResult.Success(response)
-        } catch(e: Exception) {
-            JobResult.Error(e)
+        return withContext(Dispatchers.IO) {
+            try {
+                val response: UserResponseDto = githubUserService.getUser(userRequestDto.id)
+                JobResult.Success(response)
+            } catch(e: Exception) {
+                JobResult.Error(e)
+            }
         }
     }
 
