@@ -7,6 +7,7 @@ import com.example.sample.data.remote.dto.UserRequestDto
 import com.example.sample.data.remote.dto.UserResponseDto
 import com.example.sample.data.succeeded
 import com.example.sample.repository.GithubUserRepository
+import com.example.sample.repository.SearchRepository
 import com.example.sample.ui.MainState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val githubUserRepository: GithubUserRepository
+    private val githubUserRepository: GithubUserRepository,
+    private val searchRepository: SearchRepository
 ): ViewModel() {
 
     private val viewModelState = MutableStateFlow(
