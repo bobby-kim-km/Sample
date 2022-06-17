@@ -25,12 +25,17 @@ class SearchRepository @Inject constructor(
         }
     }
 
+    suspend fun getRecentSearch(searchId: Int): RecentSearch {
+        return recentSearchDao.get(searchId)
+    }
+
     suspend fun insertRecentSearch(recentSearch: RecentSearch) {
         return recentSearchDao.insert(recentSearch)
     }
 
-    suspend fun deleteRecentSearch(recentSearch: RecentSearch) {
-        return recentSearchDao.delete(recentSearch)
+    suspend fun deleteRecentSearch(searchId: Int) {
+        val search: RecentSearch = getRecentSearch(searchId)
+        return recentSearchDao.delete(search)
     }
 
     suspend fun deleteAllRecentSearch() {

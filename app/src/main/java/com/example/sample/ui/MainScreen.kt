@@ -2,6 +2,8 @@ package com.example.sample.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -17,7 +19,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.example.sample.data.local.model.RecentSearch
 import com.example.sample.data.remote.dto.UserResponseDto
+import com.example.sample.ui.components.SearchItem
 import com.example.sample.view_model.MainViewModel
 
 @Composable
@@ -30,8 +34,9 @@ fun MainScreen(
     MainScreen(
         uiState = uiState,
         openUserGithubPage = openUserGithubPage,
-        getUserInfo = { viewModel.getUserInfo(uiState.githubIdTextFieldValue)},
-        setGithubIdTextField = { inputStr -> viewModel.setGithubIdTextField(inputStr) }
+        getUserInfo = { viewModel.getUserInfo(uiState.githubIdTextFieldValue) },
+        setGithubIdTextField = { inputStr -> viewModel.setGithubIdTextField(inputStr) },
+        onClickedDeleteSearch = { searchId -> viewModel.deleteRecentSearch(searchId) }
     )
 
 }
@@ -41,7 +46,8 @@ private fun MainScreen(
     uiState: MainUiState,
     openUserGithubPage: (url: String) -> Unit,
     getUserInfo: () -> Unit,
-    setGithubIdTextField: (inputStr: String) -> Unit
+    setGithubIdTextField: (inputStr: String) -> Unit,
+    onClickedDeleteSearch: (searchId: Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -60,7 +66,11 @@ private fun MainScreen(
                 getUserInfo = getUserInfo,
                 setGithubIdTextField = setGithubIdTextField
             )
-
+            Spacer(modifier = Modifier.height(8.dp))
+            RecentSearchScreen(
+                recentSearchList = uiState.recentSearchList,
+                onClickedDeleteSearch = onClickedDeleteSearch
+            )
             Spacer(modifier = Modifier.height(8.dp))
 
             when(getScreenType(uiState)) {
@@ -150,6 +160,37 @@ private fun SearchSuccessScreen(
     }
 }
 
+
+@Composable
+private fun RecentSearchScreen(
+    recentSearchList: List<RecentSearch>,
+    onClickedDeleteSearch: (searchId: Int) -> Unit
+) {
+    Column (
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Text("[Recent Search List]")
+        Spacer(modifier = Modifier.height(4.dp))
+        LazyColumn(
+            contentPadding = PaddingValues(vertical = 16.dp, horizontal = 16.dp),   // 상하 좌우 패딩
+            verticalArrangement = Arrangement.spacedBy(16.dp),  // 아이템간의 패딩
+        ) {
+            items(recentSearchList) { item ->
+
+                Column(
+                    Modifier.padding(2.dp)
+                ) {
+                    SearchItem(
+                        recentSearch = item,
+                        onClickedDeleteSearch = onClickedDeleteSearch
+                    )
+                }
+
+            }
+        }
+    }
+}
+
 private enum class ScreenType {
     NoData,
     Error,
@@ -192,5 +233,21 @@ private fun PreviewSearchSuccessScreen() {
     SearchSuccessScreen(
         user = user,
         openUserGithubPage = { }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewRecentSearchScreen() {
+    val recentSearchList = arrayListOf(
+        RecentSearch(content = "search 1").apply { uid = 1 },
+        RecentSearch(content = "search 2").apply { uid = 2 },
+        RecentSearch(content = "search 3").apply { uid = 3 },
+        RecentSearch(content = "search 4").apply { uid = 4 },
+        RecentSearch(content = "search 5").apply { uid = 5 }
+    )
+    RecentSearchScreen(
+        recentSearchList = recentSearchList,
+        onClickedDeleteSearch = {}
     )
 }
