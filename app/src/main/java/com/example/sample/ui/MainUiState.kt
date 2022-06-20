@@ -3,7 +3,7 @@ package com.example.sample.ui
 import com.example.sample.data.local.model.RecentSearch
 import com.example.sample.data.remote.dto.UserResponseDto
 
-data class MainState(
+data class MainViewModelState(
     val user: UserResponseDto? = null,
     val githubIdTextFieldValue: String = "",
     val isLoading: Boolean = false,

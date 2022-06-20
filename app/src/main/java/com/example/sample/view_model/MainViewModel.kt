@@ -9,7 +9,7 @@ import com.example.sample.data.remote.dto.UserResponseDto
 import com.example.sample.data.succeeded
 import com.example.sample.repository.GithubUserRepository
 import com.example.sample.repository.SearchRepository
-import com.example.sample.ui.MainState
+import com.example.sample.ui.MainViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -22,7 +22,7 @@ class MainViewModel @Inject constructor(
 ): ViewModel() {
 
     private val viewModelState = MutableStateFlow(
-        MainState(isLoading = true)
+        MainViewModelState(isLoading = true)
     )
 
     val uiState = viewModelState
@@ -80,7 +80,7 @@ class MainViewModel @Inject constructor(
         } else {
             getAllSearchResult as JobResult.Error
             viewModelState.update {
-                it.copy(recentSearchList = null, isLoading = false)
+                it.copy(recentSearchList = null, errorMessage = getAllSearchResult.exception.message, isLoading = false)
             }
         }
     }
