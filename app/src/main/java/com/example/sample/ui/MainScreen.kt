@@ -31,6 +31,7 @@ fun MainScreen(
 ) {
 
     val uiState: MainUiState by viewModel.uiState.collectAsState()
+
     MainScreen(
         uiState = uiState,
         openUserGithubPage = openUserGithubPage,
@@ -74,14 +75,14 @@ private fun MainScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             when(getScreenType(uiState)) {
-                ScreenType.HasData -> {
-                    check(uiState is MainUiState.HasData)
+                ScreenType.HasUserData -> {
+                    check(uiState is MainUiState.HasUserData)
                     SearchSuccessScreen(
                         user = uiState.user,
                         openUserGithubPage = openUserGithubPage
                     )
                 }
-                ScreenType.NoData -> {
+                ScreenType.NoUserData -> {
                     Text("No Data")
                 }
                 ScreenType.Error -> {
@@ -192,21 +193,21 @@ private fun RecentSearchScreen(
 }
 
 private enum class ScreenType {
-    NoData,
+    NoUserData,
     Error,
-    HasData
+    HasUserData
 }
 
 @Composable
 private fun getScreenType(
     uiState: MainUiState
 ): ScreenType = when (uiState) {
-    is MainUiState.HasData -> {
-        ScreenType.HasData
+    is MainUiState.HasUserData -> {
+        ScreenType.HasUserData
     }
-    is MainUiState.NoData -> {
+    is MainUiState.NoUserData -> {
         if (uiState.errorMessage == "") {
-            ScreenType.NoData
+            ScreenType.NoUserData
         } else {
             ScreenType.Error
         }

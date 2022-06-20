@@ -13,14 +13,14 @@ data class MainViewModelState(
 
     fun toUiState(): MainUiState =
         if (user == null) {
-            MainUiState.NoData(
+            MainUiState.NoUserData(
                 isLoading = isLoading,
                 errorMessage = errorMessage ?: "",
                 githubIdTextFieldValue = githubIdTextFieldValue,
                 recentSearchList = recentSearchList ?: arrayListOf()
             )
         } else {
-            MainUiState.HasData(
+            MainUiState.HasUserData(
                 user = user,
                 isLoading = isLoading,
                 errorMessage = errorMessage ?: "",
@@ -38,14 +38,14 @@ sealed interface MainUiState {
     val githubIdTextFieldValue: String
     val recentSearchList: List<RecentSearch>
 
-    data class NoData(
+    data class NoUserData(
         override val isLoading: Boolean,
         override val errorMessage: String,
         override val githubIdTextFieldValue: String,
         override val recentSearchList: List<RecentSearch>,
     ): MainUiState
 
-    data class HasData(
+    data class HasUserData(
         val user: UserResponseDto,
         override val isLoading: Boolean,
         override val errorMessage: String,
