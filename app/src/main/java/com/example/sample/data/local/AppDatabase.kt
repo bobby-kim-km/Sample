@@ -14,7 +14,7 @@ abstract class AppDatabase: RoomDatabase() {
 
     companion object {
 
-        private const val DATABASE_NAME = "nenio-db"
+        private const val DATABASE_NAME = "sample-db"
 
         // For Singleton instantiation
         @Volatile private var instance: AppDatabase? = null
